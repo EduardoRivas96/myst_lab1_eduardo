@@ -18,7 +18,7 @@ options(knitr.table.format = "html")
 Quandl.api_key("PgavWKzHY7L8AwGkLY2e")
 
 #Función para descargar precios
-Bajar_precios <-function(Columns, Tickers, Fecha_In, Fecha_Fn)
+Bajar_precios <-function(Columns, Ticker, Fecha_In, Fecha_Fn) {
   
   # Funcion para descargar N cantidad de activos desde QUANDL 
   # -- Dependencias: QUANDL 
@@ -29,11 +29,19 @@ Bajar_precios <-function(Columns, Tickers, Fecha_In, Fecha_Fn)
   
   #Descargar Precios
   
-  Datos <- Quandl.datable(code = "WIKI/PRICES", qopts.columns=Columns, ticker=Tickers, date.gte=Fecha_In, date.lte=Fecha_Fn)
+  Datos <- Quandl.datatable(code = "WIKI/PRICES", qopts.columns=Columns, ticker=Ticker, date.gte=Fecha_In, date.lte=Fecha_Fn)
 
-return(Datos)
+return(Datos)}
 
 #Tikers de acciones y datos a solicitar a Quandl
 
 tk<- c("TSLA", "AAPL", "SPY")
-cs<-c("date", "adj_close")
+cs<- c("date", "adj_close")
+
+fs<- c("2015-08-01", "2016-08-01")
+
+Datos<- list()
+
+for(i in 1:length(tk)){ Datos[[i]]<- Bajar_precios(Columns =cs, Ticker=tk[i], Fecha_In=fs[1], Fecha_Fn = fs[2])}
+
+names(Datos)<- tk
