@@ -110,3 +110,19 @@ Rends <- xts(x = cbind(Datos[[1]]$adj_close_r, Datos[[2]]$adj_close_r, Datos[[3]
              order.by = Datos[[1]]$date)[-1]
 
 names(Rends) <- tk
+
+Port1<- portfolio.spec(assets = tk) 
+
+#Especificar restricciones del portafolio
+#1era restriccion, invertir el 100% del capital en el portafolio
+
+Port1<- add.constraint(portfolio = Port1, type = "full_investment")
+
+#limites superior e inferior de los pesos individuales
+Port1<- add.constraint(portfolio = Port1,
+                       type = "box",min= c(0.01, 0.01, 0.01), max= c(0.7, 0.7, 0.7))
+
+Port1<- add.objective(portfolio = Port1, type = "return", name = "mean")
+
+Port1<- optimize.portfolio(R= Rends, portfolio = Port1, optimize_method = "random",
+                           trace=TRUE, search_size = 500)
