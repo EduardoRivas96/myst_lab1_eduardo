@@ -17,7 +17,7 @@ suppressMessages(library(plotly)) # Graficas interactivas
 
 suppressMessages(library(Quandl)) # Descargar Precios
 
-suppressMessages(library(PortfolioAnalytics)) # Teor?a Moderna de Portafolios
+suppressMessages(library(PortfolioAnalytics)) # Teoría Moderna de Portafolios
 
 suppressMessages(library(ROI)) # Optimizacion para portafolio
 
@@ -87,7 +87,7 @@ fs <- c("2015-08-01", "2017-08-01")
 
 Datos <- list()
 
-
+Capital_Inicial<-10000
 
 for(i in 1:length(tk))
   
@@ -125,20 +125,44 @@ Port1<- add.constraint(portfolio = Port1,
 Port1<- add.objective(portfolio = Port1, type = "return", name = "mean")
 
 Port1<- optimize.portfolio(R= Rends, portfolio = Port1, optimize_method = "random",
-                           trace=TRUE, search_size = 5000)
+                           trace=TRUE, search_size = 500)
 
 Portafolios<- vector("list", length= length(Port1$random_portfolio_objective_results))
 
 for(i in 1:length(Port1$random_portfolio_objective_results))
   
-  Portafolios[[i]]$Pesos <- Port1$random_portfolio_objective_results[[i]]$weights
+  Portafolios[[i]]$Pesos <- Port1$random_portfolio_objective_results[[i]]$weights #Doble corchete para tomar un elemento de una LISTA
 
   Portafolios[[i]]$Medias <- Port1$random_portfolio_objective_results[[i]]$objective_measures$mean
   
   Portafolios[[i]]$Vars <- var.portfolio(R= Port1$R, weights = Portafolios[[i]]$Pesos)
   
-  names(Portafolios[[i]]$Medias)<- NULL
+  ##names(Portafolios[[i]]$Medias)<- NULL
   
   df_Portafolios <-data.frame(matrix(nrow=length(Port1$random_portfolio_objective_results),ncol=3, data=0))
   
-  colnames(df_Portafolios)<-c("Rend", "Var", "Close")
+  colnames(df_Portafolios)<-c("Rend", "Var", "Clase")
+  
+  for(i in 1:lenght(Port1$random_portfolio_objective_results)){
+    i<-2
+    
+    df_Portafolios$Rend[i]<- round(Portafolios[[i]]$Medias*252,4) #Un corchete cuando se selecciona un elemento individual
+    
+    df_Portafolios$Var[i]<- round(sqrt(Portafolios[[i]]$Vars)*sqrt(252),4) 
+    
+    df_Portafolios$Clase[i]<- "No-Frontera"
+    
+    for(k in 1:lenght(tk)){
+      k<-2
+      
+    df_Portafolios[i,paste("Peso_", tk[k], sep="")]<- Portafolios[[i]]$Pesos[k]
+    
+    df_Portafolios[i,paste("Titulos_ini_", tk[k], sep="")]<- 
+      (Capital_Inicial*Portafolios[[i]]$Pesos[k])%/%Datos[[k]]$adj_close[1]
+    
+    }
+    
+  }
+    
+  
+  
