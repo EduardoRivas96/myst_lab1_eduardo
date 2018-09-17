@@ -5,10 +5,10 @@
 # Remover todos los objetos del "Environment"
 rm(list = ls())
 
-# los 0s aceptados antes de expresas una cifra en notaci?n cient?fica
+# los 0s aceptados antes de expresas una cifra en notacion cientifica
 options("scipen"=100, "digits"=4)
 
-# Cargas librer?as a utilizar
+# Cargas librerias a utilizar
 suppressMessages(library(plotly)) # Graficas interactivas
 suppressMessages(library(Quandl)) # Descargar Precios
 suppressMessages(library(ROI))    # Optimizacion para portafolio
@@ -61,8 +61,6 @@ for(i in 1:length(tk)) {
 names(Datos) <- tk
 
 # -- ----------------------------------------------------------------------------------------- -- #
-# -- ----------------------------------------------------------------------------------------- -- #
-# -- ----------------------------------------------------------------------------------------- -- #
 
 longitudes <- c()
 
@@ -79,7 +77,7 @@ DatosN <- Datos[completos]
 columnas <- c()
 nuevos   <- c()
 
-# Funci?n para repetir una funci?n por cada columna del data.frame
+# Funcion para repetir una funci?n por cada columna del data.frame
 Precios <- do.call(cbind, DatosN)
 
 # Crear vector con nombres de columnas de interes = "nombredeactivo.adj_close_r"
@@ -170,7 +168,7 @@ for(i in 1:length(Historico$Date)){
 
 for(i in 2:length(Historico$Date)){
   
-  if(Historico$R_Precio[i] <= Regla0_R){ # Generar Se?al
+  if(Historico$R_Precio[i] <= Regla0_R){ # Generar Senal
     
     # Establecer capital actual, inicialmente, igual al capital anterior
     Historico$Capital[i] <- Historico$Capital[i-1]
@@ -198,7 +196,7 @@ for(i in 2:length(Historico$Date)){
     
     
   }
-  else { # Sin se?al
+  else { # Sin senal
     
   }
   
